@@ -3,7 +3,7 @@ export function Part({ejercicios}){
         // <p>{part} {exercise}</p>
         <div>
             {ejercicios.map((ejercicio) => (
-                <p key={ejercicio.id}>
+                <p key={ejercicio.course}>
                     {ejercicio.course} {ejercicio.exercise}
                 </p>
             ))}
