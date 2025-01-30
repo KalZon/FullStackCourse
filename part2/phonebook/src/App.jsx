@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import { Persons } from './components/Persons'
+import { PersonForm } from './components/PersonForm'
+import { Filter } from './components/Filter'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -44,7 +47,6 @@ const App = () => {
       setNewNumber('')
     }
   }
-  
 
   // Filter
   const filteredPersons = persons.filter(person =>
@@ -54,24 +56,11 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input name='filter' type="text" value={filter} onChange={handleFilterChange} />
-      </div>
+      <Filter filter={filter} handleFilterChange={handleFilterChange}/>
       <h2>Add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input name='name' value={newName} onChange={handleNameChange} />
-        </div>
-        <div>number: <input name='number' value={newNumber} onChange={handleNumberChange} /></div>
-        {error && <h4 style={{color: 'red'}}>You can only type numbers or hyphens</h4>}
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} error={error}/>
       <h2>Numbers</h2>
-      {filteredPersons.map(person => (
-        <p key={person.id}>{person.name} {person.number}</p>
-      ))}
+      <Persons persons={filteredPersons}/>
     </div>
   )
 }
