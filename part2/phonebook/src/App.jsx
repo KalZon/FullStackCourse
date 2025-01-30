@@ -2,11 +2,14 @@ import { useState } from 'react';
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '849-84-85', id: 1 }, 
-    { name: 'Kaleb Zambrano', number:'95-9846-56', id: 2}
+    { name: 'Arto Hellas', number: '040-123456', id: 1 },
+    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
+    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
+    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
   ]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+  const [filter, setFilter] = useState(''); 
 
   const handleNameChange = (event) => {
     setNewName(event.target.value);
@@ -16,25 +19,38 @@ const App = () => {
     setNewNumber(event.target.value);
   };
 
-  const addName = (event) => {
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value.toLowerCase());  
+  };
+
+  const addPerson = (event) => {
     event.preventDefault();
-    if (newName.trim() === '' || newNumber.trim() === ''){
-      alert('Completa todos los campos')
-    }else if (!persons.some(person => person.name === newName || person.number === newNumber)){
-      setPersons([...persons, { name: newName, number: newNumber, id: persons.length+1 }]);
+    if (newName.trim() === '' || newNumber.trim() === '') {
+      alert('Completa todos los campos');
+    } else if (!persons.some(person => person.name === newName || person.number === newNumber)) {
+      setPersons([...persons, { name: newName, number: newNumber, id: persons.length + 1 }]);
       setNewName('');
       setNewNumber('');
-    }else{
-      alert(`${newName} or ${newNumber} is already added to phonebook`)
-      setNewName('')
-      setNewNumber('')
+    } else {
+      alert(`${newName} or ${newNumber} is already added to phonebook`);
+      setNewName('');
+      setNewNumber('');
     }
   };
+
+  // Filter
+  const filteredPersons = persons.filter(person =>
+    person.name.toLowerCase().includes(filter)
+  );
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addName}>
+      <div>
+        filter shown with <input type="text" value={filter} onChange={handleFilterChange} />
+      </div>
+      <h2>Add a new</h2>
+      <form onSubmit={addPerson}>
         <div>
           name: <input name='name' value={newName} onChange={handleNameChange} />
         </div>
@@ -44,10 +60,9 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons.map(person => (
+      {filteredPersons.map(person => (
         <p key={person.id}>{person.name} {person.number}</p>
       ))}
-      <div>debug: {newName}, {newNumber}</div>
     </div>
   );
 };
