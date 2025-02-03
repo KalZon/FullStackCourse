@@ -1,19 +1,22 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Persons } from './components/Persons'
 import { PersonForm } from './components/PersonForm'
 import { Filter } from './components/Filter'
+import axios from 'axios'
+import personServices from './services/persons'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ])
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('') 
   const [error, setError] = useState(false)
+
+  useEffect(() => {
+    personServices.getAll()
+    .then(initialPersons => setPersons(initialPersons))
+  }, [])
+  console.log('render', persons.length, 'notes')
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -30,16 +33,24 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
     const phoneReq = /^[0-9-]+$/
-      
+    
+    const personObject = {
+      name: newName,
+      number: newNumber
+    }
+
     if (newName.trim() === '' || newNumber.trim() === '') {
       alert('Completa todos los campos')
     } else if (!phoneReq.test(newNumber)) {
       setError(true)
     } else if (!persons.some(person => person.name === newName || person.number === newNumber)) {
       setError(false)
-      setPersons([...persons, { name: newName, number: newNumber, id: persons.length + 1 }])
-      setNewName('')
-      setNewNumber('')
+      personServices.create(personObject)
+        .then(returnPerson => {
+          setPersons(persons.concat(returnPerson))
+          setNewName('')
+          setNewNumber('')
+        })
     } else {
       setError(false)
       alert(`${newName} or ${newNumber} is already added to phonebook`)
