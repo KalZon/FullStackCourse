@@ -1,8 +1,14 @@
-export function Persons({persons}){
-    
+import { Numbers } from './Numbers'
+
+export function Persons({persons, handleDelete}){
+
     return (
-        persons.map(person => (
-            <p key={person.id}>{person.name} {person.number}</p>
-          ))
+        <ul>
+            {
+                persons.map(person => (
+                    <Numbers key={person.id} name={person.name} id={person.id} number={person.number} handleDelete={handleDelete}/>
+                ))
+            }
+        </ul>
     )
 }

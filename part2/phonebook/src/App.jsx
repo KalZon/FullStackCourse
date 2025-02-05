@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { Persons } from './components/Persons'
 import { PersonForm } from './components/PersonForm'
 import { Filter } from './components/Filter'
-import axios from 'axios'
 import personServices from './services/persons'
 
 const App = () => {
@@ -30,6 +29,11 @@ const App = () => {
     setFilter(event.target.value.toLowerCase())
   }
 
+  const resetInputs = () =>{
+    setNewName('')
+    setNewNumber('')
+  }
+
   const addPerson = (event) => {
     event.preventDefault()
     const phoneReq = /^[0-9-]+$/
@@ -43,20 +47,27 @@ const App = () => {
       alert('Completa todos los campos')
     } else if (!phoneReq.test(newNumber)) {
       setError(true)
-    } else if (!persons.some(person => person.name === newName || person.number === newNumber)) {
+    } else if (!persons.some(person => person.name.toLowerCase() === newName || person.number === newNumber)) {
       setError(false)
       personServices.create(personObject)
         .then(returnPerson => {
           setPersons(persons.concat(returnPerson))
-          setNewName('')
-          setNewNumber('')
+          resetInputs()
         })
-    } else {
+    } else if(persons.some(person => person.name.toLowerCase() === newName)){
       setError(false)
-      alert(`${newName} or ${newNumber} is already added to phonebook`)
-      setNewName('')
-      setNewNumber('')
+      const confirmationUpdate = window.confirm(`${newName} is already added, do you want to replace the old number with a new one?`)
+      resetInputs()
     }
+  }
+
+  const eliminarPersona = (id, name) =>{
+    const confirmation = window.confirm(`Delete ${name}?`)
+      confirmation
+      ? personServices.deletePerson(id)
+      : console.log('No se acepto la solicitud de eliminación')
+    
+    setPersons(persons.filter(person => person.id !== id))
   }
 
   // Filter
@@ -71,7 +82,7 @@ const App = () => {
       <h2>Add a new</h2>
       <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} error={error}/>
       <h2>Numbers</h2>
-      <Persons persons={filteredPersons}/>
+      <Persons persons={filteredPersons} handleDelete={eliminarPersona}/>
     </div>
   )
 }
