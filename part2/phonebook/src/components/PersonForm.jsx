@@ -1,5 +1,5 @@
 
-export function PersonForm({addPerson, newName, newNumber, handleNameChange, handleNumberChange, error}){
+export function PersonForm({addPerson, newName, newNumber, handleNameChange, handleNumberChange}){
 
     return (
         <form onSubmit={addPerson}>
@@ -7,7 +7,6 @@ export function PersonForm({addPerson, newName, newNumber, handleNameChange, han
             name: <input name='name' value={newName} onChange={handleNameChange} required/>
             </div>
             <div>number: <input name='number' value={newNumber} onChange={handleNumberChange} required/></div>
-            {error && <h4 style={{color: 'red'}}>You can only type numbers or hyphens</h4>}
             <div>
             <button type="submit">add</button>
             </div>

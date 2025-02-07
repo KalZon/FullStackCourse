@@ -1,0 +1,22 @@
+.error{
+    border: solid red 1px;
+    border-radius: 5px;
+    margin: 5px 0px;
+    padding: 7px;
+    color: red;
+    background-color: rgb(255, 165, 165);
+}
+.success{
+    border: solid rgb(0, 204, 0) 1px;
+    border-radius: 5px;
+    margin: 5px 0px;
+    padding: 7px;
+    color: rgb(0, 204, 0);
+    background-color: rgb(198, 255, 194);
+}
+li{
+    margin: 3px;
+}
+li button{
+    margin-left: 5px;
+}

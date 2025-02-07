@@ -4,13 +4,15 @@ import { PersonForm } from './components/PersonForm'
 import { Filter } from './components/Filter'
 import personServices from './services/persons'
 import axios from 'axios'
+import {Notificacion} from './components/Notificacion'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('') 
-  const [error, setError] = useState(false)
+  const [notificationError, setNotificationError] = useState(null)
+  const [notificationSuccess, setNotificationSuccess] = useState(null)
 
   useEffect(() => {
     personServices.getAll()
@@ -46,8 +48,23 @@ const App = () => {
     //console.log(persona.id)
     const changedPersons = { ...persona, number: newNumber }
 
-    axios.put(url, changedPersons).then(response => {
+    axios.put(url, changedPersons)
+    .then(response => {
       setPersons(persons.map(persona => persona.id !== id ? persona : response.data))
+      setNotificationSuccess(`${persona.name} updated successfully`)
+    
+      setTimeout(() => {
+        setNotificationSuccess(null)
+      }, 2000)
+    })
+    .catch(error => {
+      setNotificationError(`${persona.name} was already removed from sever`)
+    
+      setPersons(persons.filter(person => person.id !== id))
+      setTimeout(() => {
+        setNotificationError(null)
+      }, 2000)
+    
     })
     resetInputs()
   }
@@ -64,22 +81,30 @@ const App = () => {
     }
      
     if (!phoneReq.test(newNumber)) {
-      setError(true)
+      setNotificationError('You can only type numbers or hyphens')
+      setTimeout(() => {
+        setNotificationError(null)
+      }, 2000)
+
     } else if (!persons.some(person => person.slug === formatNewName.toLowerCase() || person.number === newNumber)) {
-      setError(false)
+
       personServices.create(personObject)
         .then(returnPerson => {
           setPersons(persons.concat(returnPerson))
+          setNotificationSuccess(`Added ${formatNewName}`)
+          setTimeout(() => {
+            setNotificationSuccess(null)
+          }, 2000)
           resetInputs()
         })
     } else if(persons.some(person => person.slug === formatNewName.toLowerCase())){
-      setError(false)
+
       const confirmationUpdate = window.confirm(`${formatNewName} is already added, do you want to replace the old number with a new one?`)
       confirmationUpdate
       ? updatePersona(updatingPerson.id)
       : resetInputs()
     } else{
-      window.alert(`You already added a person with the number: ${newNumber}`)
+      setNotificationError(`You already added a person with the number: ${newNumber}`)
       resetInputs()
     }
   }
@@ -100,9 +125,10 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notificacion messageError={notificationError} messageSuccess={notificationSuccess}/>
       <Filter filter={filter} handleFilterChange={handleFilterChange}/>
       <h2>Add a new</h2>
-      <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} error={error}/>
+      <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}/>
       <h2>Numbers</h2>
       <Persons persons={filteredPersons} handleDelete={eliminarPersona}/>
     </div>
