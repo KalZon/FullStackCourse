@@ -16,7 +16,6 @@ const App = () => {
     personServices.getAll()
     .then(initialPersons => setPersons(initialPersons))
   }, [])
-  console.log('render', persons.length, 'notes')
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -27,7 +26,7 @@ const App = () => {
   }
 
   const handleFilterChange = (event) => {
-    setFilter(event.target.value.toLowerCase())
+    setFilter(event.target.value.toLowerCase().trimStart())
   }
 
   const resetInputs = () =>{
@@ -35,11 +34,14 @@ const App = () => {
     setNewNumber('')
   }
   
+  const formatNewName = newName.trim()
+
+  const updatingPerson = persons.find(num => num.slug === formatNewName.toLowerCase())
 
   const updatePersona = id => {
     const url = `http://localhost:3001/persons/${id}`
     //console.log('aca corro')
-    const persona = persons.find(num => num.name.toLowerCase() === newName.toLowerCase())
+    const persona = persons.find(num => num.slug === formatNewName.toLowerCase())
     console.log(persona)
     //console.log(persona.id)
     const changedPersons = { ...persona, number: newNumber }
@@ -47,37 +49,38 @@ const App = () => {
     axios.put(url, changedPersons).then(response => {
       setPersons(persons.map(persona => persona.id !== id ? persona : response.data))
     })
-
+    resetInputs()
   }
-  const updatingPerson = persons.find(num => num.name === newName)
-
+  
   const addPerson = (event) => {
     event.preventDefault()
     const phoneReq = /^[0-9-]+$/
     
     
     const personObject = {
-      name: newName,
+      name: formatNewName,
+      slug: formatNewName.toLowerCase(),
       number: newNumber
     }
      
-    if (newName.trim() === '' || newNumber.trim() === '') {
-      alert('Completa todos los campos')
-    } else if (!phoneReq.test(newNumber)) {
+    if (!phoneReq.test(newNumber)) {
       setError(true)
-    } else if (!persons.some(person => person.name.toLowerCase() === newName.toLowerCase() || person.number === newNumber)) {
+    } else if (!persons.some(person => person.slug === formatNewName.toLowerCase() || person.number === newNumber)) {
       setError(false)
       personServices.create(personObject)
         .then(returnPerson => {
           setPersons(persons.concat(returnPerson))
           resetInputs()
         })
-    } else if(persons.some(person => person.name.toLowerCase() === newName.toLowerCase())){
+    } else if(persons.some(person => person.slug === formatNewName.toLowerCase())){
       setError(false)
-      const confirmationUpdate = window.confirm(`${newName} is already added, do you want to replace the old number with a new one?`)
+      const confirmationUpdate = window.confirm(`${formatNewName} is already added, do you want to replace the old number with a new one?`)
       confirmationUpdate
       ? updatePersona(updatingPerson.id)
       : resetInputs()
+    } else{
+      window.alert(`You already added a person with the number: ${newNumber}`)
+      resetInputs()
     }
   }
 

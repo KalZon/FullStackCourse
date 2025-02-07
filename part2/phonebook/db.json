@@ -3,32 +3,56 @@
     {
       "id": "1",
       "name": "Arto Hellas",
-      "number": "040-123456"
+      "slug": "arto hellas",
+      "number": "505500505"
     },
     {
       "id": "2",
       "name": "Ada Lovelace",
+      "slug": "ada lovelace",
       "number": "39-44-5323523"
     },
     {
       "id": "3",
       "name": "Dan Abramov",
+      "slug": "dan abramov",
       "number": "12-43-234345"
     },
     {
       "id": "4",
       "name": "Mary Poppendieck",
+      "slug": "mary poppendieck",
       "number": "39-23-6423122"
     },
     {
       "id": "ef76",
       "name": "admin",
-      "number": "233223"
+      "slug": "admin",
+      "number": "11111"
     },
     {
       "id": "c830",
       "name": "Amin",
-      "number": "5115"
+      "slug": "amin",
+      "number": "5555"
+    },
+    {
+      "id": "7030",
+      "name": "Fernandito",
+      "slug": "fernandito",
+      "number": "1515"
+    },
+    {
+      "id": "9872",
+      "name": "Kaleb",
+      "slug": "kaleb",
+      "number": "15478"
+    },
+    {
+      "id": "5547",
+      "name": "Ronald Inoñan",
+      "slug": "ronald inoñan",
+      "number": "148956"
     }
   ]
 }
