@@ -31,10 +31,11 @@ function App() {
           onChange={handleFilterChange} 
         />
       </label>
-      {filteredCountries.length == 1
-          ? <UniqueCountry country={filteredCountries}/>
-          : (filteredCountries.length <= 10) ? <Countries paises={filteredCountries}/>
-            : <p>Too many matches</p>
+      {filteredCountries.length == 1 ? (
+        <UniqueCountry country={filteredCountries}/>
+      ): filteredCountries.length <= 10 ? (
+        <Countries paises={filteredCountries}/>
+      ): <p>Too many matches</p>
       }
     </>
   );

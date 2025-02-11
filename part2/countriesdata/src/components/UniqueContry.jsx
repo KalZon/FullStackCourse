@@ -14,7 +14,7 @@ export function UniqueCountry({country}){
             <ul>
                 {
                     languages.map((language)=>(
-                        <li>
+                        <li key={language}>
                             {language}
                         </li>
                     ))
