@@ -19,6 +19,8 @@ const App = () => {
     .then(initialPersons => setPersons(initialPersons))
   }, [])
 
+
+  // Control de cada cambio en los inputs
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
@@ -31,18 +33,21 @@ const App = () => {
     setFilter(event.target.value.toLowerCase().trimStart())
   }
 
+  // Funcion de reset para no repetirlo a la hora de usar otras funciones
   const resetInputs = () =>{
     setNewName('')
     setNewNumber('')
   }
   
+  // Formateo para no poder agregar espacios finales
   const formatNewName = newName.trim()
 
+  // Forma de filtrado por un nuevo slug
   const updatingPerson = persons.find(num => num.slug === formatNewName.toLowerCase())
 
   const updatePersona = id => {
     const url = `http://localhost:3001/persons/${id}`
-    //console.log('aca corro')
+    //console.log('aca funciona')
     const persona = persons.find(num => num.slug === formatNewName.toLowerCase())
     console.log(persona)
     //console.log(persona.id)
